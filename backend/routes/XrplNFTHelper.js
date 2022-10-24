@@ -222,4 +222,4 @@ catch(err) {
 
 
 
-export default Cem
+export default XrplNFTHelper
