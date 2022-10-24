@@ -1,0 +1,29 @@
+[{
+  "_id": {
+    "$oid": "5fd21021d230812954b4b49a"
+  },
+  "firstName": "Manish",
+  "lastName": "Mandal",
+  "userName": "Manntrix",
+  "email": "admin@gmail.com",
+  "password": "asdfg123",
+  "isAdmin": true
+},{
+  "_id": {
+    "$oid": "5fd21f60d230812954b4b49b"
+  },
+  "firstName": "John",
+  "lastName": "Doe",
+  "userName": "Johndoe",
+  "email": "johndoe@gmail.com",
+  "password": "asdfg123"
+},{
+  "_id": {
+    "$oid": "5fd21f82d230812954b4b49c"
+  },
+  "firstName": "Demo",
+  "lastName": "test",
+  "userName": "Demo",
+  "email": "demo@gmail.com",
+  "password": "asdfg123"
+}]
