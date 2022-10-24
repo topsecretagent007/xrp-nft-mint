@@ -34,6 +34,28 @@ router.route('/mintNFT').get((req, res) => {
 })
 ```
 
+# Install and use the developer example
+
+1) Install all packages. Do three npm installs in all three directories. 
+```
+XRPL-NFT-Proof-of-Attendance-Infrastructure-main/XRPL-NFT-Proof-of-Attendance-Infrastructure-main/ npm install
+XRPL-NFT-Proof-of-Attendance-Infrastructure-main/XRPL-NFT-Proof-of-Attendance-Infrastructure-main/backend/ npm install
+XRPL-NFT-Proof-of-Attendance-Infrastructure-main/XRPL-NFT-Proof-of-Attendance-Infrastructure-main/frontend npm install
+
+```
+
+2) Run backend then frontend. 
+
+```
+../backend/npm start
+../frontend/npm start
+
+```
+
+3) Adjust App.js axios get call to call different backend routes. Observe output and responses from backend.
+
+
+
 # Current Functionality
 
 - Mint Single NFT.
