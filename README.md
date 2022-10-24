@@ -5,7 +5,9 @@ XRPL-Proof-of-Attendance-Infrastructure/backend/routes/XrplNFTHelper.js
 
 **XrplNFTHelper.js** is a Javascript class that contains functionality that allows event organizers to mint and distribute Attendance NFTs on the XRP Ledger.
 
-**XrplNFTHelper.js** is meant to be imported into the routes file of your project. A working route for each one of the classes functions has been provided in this example. The necessary transaction data has been hard coded into the routes for sake of ease. In a production version the frontend will make post/get calls with details of the transaction and this will be handled in the req.body inside the routes file on the backend.
+**XrplNFTHelper.js** is meant to be imported and instantiated inside the routes file of your project. A working route for each one of the classes functions has been provided in this example. The necessary transaction data has been hard coded into the routes for sake of ease. 
+
+In a production version the frontend will make post/get calls with details of the transaction and this will be handled in the req.body inside the routes file on the backend.
 
 ```
 import XrplNFTHelper from './XrplNFTHelper.js';
