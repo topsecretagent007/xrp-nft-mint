@@ -21,7 +21,7 @@ router.route('/mintNFT').get((req, res) => {
             location: "Chiang Mai, Thailand",
             description: "Jazz club north gate",
             image: "imgfile",
-            numberOfTokens: 2
+            numberOfTokens: 1
 
     }
     
@@ -31,7 +31,8 @@ router.route('/mintNFT').get((req, res) => {
                             // Fee: parseInt(314),
                             URI: xrpl.convertStringToHex("www.test.com"), 
                             Flags: parseInt(11), 
-                            NFTokenTaxon: 0, 
+                           // NFTokenTaxon: 11111111111, 
+                            NFTokenTaxon: 0x29646,
                             Memos: memos });
 
     if(memos.numberOfTokens > 1){
@@ -127,6 +128,28 @@ router.route('/getTokenDetails').get((req, res) => {
   
   
 nftManager.getTokenDetails().then( (result) => {
+
+  res.send(result)
+  
+});
+
+
+
+
+})
+
+
+router.route('/syncDevMode').get((req, res) => { 
+
+  const nftManager = new XrplNFTHelper({TransactionType: "nft_info", 
+                                        Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd",
+                                        Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
+                                       });                        
+  
+  
+  
+  
+nftManager.syncDevMode().then( (result) => {
 
   res.send(result)
   

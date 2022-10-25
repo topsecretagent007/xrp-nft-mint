@@ -1,6 +1,5 @@
 import xrpl from 'xrpl';
-
-
+import fs  from 'fs'; //used for storage of token metadata in devmode
 
 export class XrplNFTHelper { 
 
@@ -148,7 +147,7 @@ async getTokens(){
 
     console.log("Connected to Sandbox..getting all NFT's.")
 
-    const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
+      const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
       const client = new xrpl.Client(this.clientDetails)
       await client.connect()
 
@@ -296,6 +295,50 @@ catch(err) {
 }
   
   }
+
+//syncDevMode
+async syncDevMode(){
+  try {
+    
+    let student = { 
+      name: 'Mike',
+      age: 23, 
+      gender: 'Male',
+      department: 'English',
+      car: 'Honda' 
+  };
+   
+  let data = JSON.stringify(student);
+  fs.writeFileSync('student-2.json', data);
+  return "done"
+
+      //const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
+     /*
+      const client = new xrpl.Client(this.clientDetails)
+      await client.connect()
+
+
+      let nfts = await client.request({
+        method: "account_nfts",
+        account: this.transactionDetails.Account
+        })
+
+        console.log(nfts.result.account_nfts.length)
+
+
+        await client.disconnect()
+
+        return nfts.result
+
+*/
+
+}
+catch(err) {
+console.log("Error occured during assignToWallet() call" + err)
+return;
+}
+
+}
 
 
 }
