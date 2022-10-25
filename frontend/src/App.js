@@ -13,6 +13,24 @@ const handleChange = (event) => {
   setAccount(event.target.name)
 
 }
+
+
+
+const getData = async() => {
+  const res = await axios.get('/api/burnAllNFT')
+  setAccount(res.data)
+  console.log(res)
+}
+
+
+
+useEffect(() => {
+  getData()
+}, [])
+
+
+
+
   return (
 <div>
 
