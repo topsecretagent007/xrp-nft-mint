@@ -54,11 +54,28 @@ if(radioButton == "mintNFT"){
       <label># of Event tickets / tokens to generate</label>
     </div>
 
-    <h2>Public Metadata</h2>
+    <div class="user-box">    
+      <input type="float" name="" required="" />
+      <label>Initial Sell Offer</label>
+    </div>
+
+    <div class="user-box">    
+      <input type="text" name="" required="" />
+      <label>Event Title</label>
+    </div>
+
+    <div class="user-box">    
+      <input type="text" name="" required="" />
+      <label>*Image File*</label>
+    </div>
+
+
+    <h2>Metadata (optional)</h2>
     <div class="user-box">
       <input type="number" name="" required="" value="0" />
       <label>Date of Event </label>
     </div>
+
     <div class="user-box">
       <input type="number" name="" required="" value="0" />
       <label>Location</label>
@@ -69,18 +86,7 @@ if(radioButton == "mintNFT"){
       <label>Time</label>
     </div>
 
-    
-    <div class="user-box">    
-      <input type="text" name="" required="" />
-      <label>*Image File*</label>
-    </div>
-
-    <div class="user-box">    
-      <input type="text" name="" required="" />
-      <label>Initial Sell Offer</label>
-    </div>
-
-  <h2>Private Metadata</h2>
+  
 
   <div class="user-box">
       <input type="checkbox" name="" required="" />
