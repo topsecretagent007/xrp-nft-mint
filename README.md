@@ -62,8 +62,6 @@ XRPL-NFT-Proof-of-Attendance-Infrastructure-main/XRPL-NFT-Proof-of-Attendance-In
 
 - Mint X number of identical NFT's and assign to same account.
 
-- Assign NFT to a different account.
-
 - get All NFT's for specified account.
 
 - Burn specified NFT.
