@@ -1,4 +1,4 @@
-# XRPL-Proof-of-Attendance-Infrastructure
+# XRPL-NFT-Proof-of-Attendance-Infrastructure
 XRPL-Proof-of-Attendance-Infrastructure/backend/routes/XrplNFTHelper.js
 
 **XrplNFTHelper.js** is designed to work within any NodeJS project. As an example, I have provided a working MERN (mongo has been disconnected) application that implemenents **XrplNFTHelper.js**.
