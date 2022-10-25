@@ -36,7 +36,8 @@ export class XrplNFTHelper {
     //Fee: this.transactionDetails.Fee,
 		URI: this.transactionDetails.URI,
 		Flags: this.transactionDetails.Flags,
-		NFTokenTaxon: this.transactionDetails.NFTokenTaxon
+		NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+    //memos: this.transactionDetails.memos
     }
     
     //submit minting transaction
@@ -65,15 +66,51 @@ catch(err) {
 
 /* Mint X number of identical tokens
 * Assign all to same wallet
-*@param int #number of tokens to mint. 
+*
+* Transaction detail requirements: 
+  this.transactionDetails.numberOfTokens - #number of tokens to mint.
+  this.transactionDetails.TransactionType,
+	this.transactionDetails.Account,
+  this.transactionDetails.Fee,
+	this.transactionDetails.URI,
+	this.transactionDetails.Flags,
+	this.transactionDetails.NFTokenTaxon
 *
 */
-  async mintX(numberOfTokens){
+  async mintX(){
     try {
      
+      const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret) //secret
+      const client = new xrpl.Client(this.clientDetails) 
+      await client.connect()
+  
+      console.log("Connected to server..minting " + this.transactionDetails.Memos.numberOfTokens + " tokens")
 
 
 
+
+      const transactionData = {
+        TransactionType: this.transactionDetails.TransactionType,
+        Account: this.transactionDetails.Account,
+        URI: this.transactionDetails.URI,
+        Flags: this.transactionDetails.Flags,
+        NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+        }
+
+        for (let index = 0; index < this.transactionDetails.Memos.numberOfTokens; index++) {
+          //submit minting transaction
+          console.log("Minting token " + index)
+          let tx = await client.submitAndWait(transactionData,{wallet})
+
+        }
+        
+        //submit minting transaction
+
+      client.disconnect()
+  
+      console.log("disconnected from server")
+
+      return "Finished"
 }
 catch(err) {
   console.log("Error occured during mintX() call" + err)
@@ -108,7 +145,9 @@ catch(err) {
   */
 async getTokens(){
   try {
-   
+
+    console.log("Connected to Sandbox..getting all NFT's.")
+
     const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
       const client = new xrpl.Client(this.clientDetails)
       await client.connect()
@@ -118,12 +157,43 @@ async getTokens(){
         method: "account_nfts",
         account: this.transactionDetails.Account
         })
+
+
+        await client.disconnect()
+        console.log("disconnecting")
+
+        return nfts.result.account_nfts
+
+
+}
+catch(err) {
+console.log("Error occured during assignToWallet() call" + err)
+return;
+}
+
+}
+
+//getTokenDetails
+async getTokenDetails(){
+  try {
+    
+
+      //const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
+      const client = new xrpl.Client(this.clientDetails)
+      await client.connect()
+
+
+      let nfts = await client.request({
+        method: "account_nfts",
+        account: this.transactionDetails.Account
+        })
+
         console.log(nfts.result.account_nfts.length)
 
 
         await client.disconnect()
 
-        return nfts.result.account_nfts 
+        return nfts.result
 
 
 
@@ -135,6 +205,7 @@ return;
 
 }
 
+
 /* Burn specified NFT
 *
 *
@@ -143,45 +214,24 @@ return;
     try {
      
 
-      const wallet = xrpl.Wallet.fromSeed("ssTkdDoL3i6SGoDjFwjtkmFpM3SAi")
-      const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
+      const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
+      const client = new xrpl.Client(this.clientDetails)
       await client.connect()
+
       console.log("Connected to Sandbox..burning single NFT.")
-      let nfts = await client.request({
-        method: "account_nfts",
-        account: this.transactionDetails.Account
-        })
-        console.log(nfts.result.account_nfts.length)
-      // Prepare transactdion -------------------------------------------------------
-    
+
+   
+    // Prepare transactdion -------------------------------------------------------
     const transactionData = {
           TransactionType: this.transactionDetails.TransactionType,
           Account: this.transactionDetails.Account,
           NFTokenID: this.transactionDetails.NFTokenID
       }
       
-      
-    /* 
-
-      const transactionData = {
-        TransactionType: this.transactionDetails.TransactionType,
-        Account: this.transactionDetails.Account,
-        Fee: this.transactionDetails.Fee,
-        URI: this.transactionDetails.URI,
-        Flags: this.transactionDetails.Flags,
-        NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
-       // NFTokenID: this.transactionDetails.tokenID
-        } 
-      */
     
       // Submit signed blob --------------------------------------------------------
       const tx = await client.submitAndWait(transactionData,{wallet})
   
-      nfts = await client.request({
-        method: "account_nfts",
-        account: this.transactionDetails.Account
-        })
-        console.log(nfts.result.account_nfts.length)
       // Check transaction results -------------------------------------------------
      console.log("Transaction result:", tx.result.meta.TransactionResult)
       console.log("Balance changes:",
@@ -203,11 +253,41 @@ catch(err) {
 
   /*Burn all NFTs in the account
   */
+
+
   async burnAllNFT(){
     try {
      
+      const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
+      const client = new xrpl.Client(this.clientDetails)
+      await client.connect()
+
+      console.log("Connected to Sandbox..burning ALL NFT's for specified account.")
+
+      let nfts = await client.request({
+        method: "account_nfts",
+        account: this.transactionDetails.Account
+        })
+
+        console.log("Attempting to burn " + nfts.result.account_nfts.length + " NFT's..")
+              
+        for (let index = 0; index < nfts.result.account_nfts.length; index++) {
 
 
+          const transactionData = {
+            TransactionType: this.transactionDetails.TransactionType,
+            Account: this.transactionDetails.Account,
+            NFTokenID: nfts.result.account_nfts[index].NFTokenID
+        }
+
+
+          const tx = await client.submitAndWait(transactionData,{wallet})
+          console.log("Burnt " + nfts.result.account_nfts[index].NFTokenID + " ")
+      
+        }
+        
+        console.log("END.. All NFT's burned")
+        return "Done";
 
 }
 catch(err) {
