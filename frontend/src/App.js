@@ -6,6 +6,7 @@ import axios from 'axios'
 const App = () => {
 
 const [account, setAccount] = useState("")
+const [radioButton, setRadioButton] = useState("mintNFT")
 
 const handleChange = (event) => {
 
@@ -17,7 +18,7 @@ const handleChange = (event) => {
 
 
 const getData = async() => {
-  const res = await axios.get('/api/burnAllNFT')
+  const res = await axios.get('/api/mintNFT')
   setAccount(res.data)
   console.log(res)
 }
@@ -29,6 +30,79 @@ useEffect(() => {
 }, [])
 
 
+const formGenerator = () => {
+  
+
+  
+if(radioButton == "mintNFT"){
+  return(
+    <form>
+
+    <div class="user-box">
+      <input type="text" name="" required="" />
+      <label>Account Number</label>
+    </div>
+
+
+    <div class="user-box">
+      <input type="text" name="" required="" />
+      <label>Secret </label>
+    </div>
+
+    <div class="user-box">
+      <input type="number" name="" required="" value="0" />
+      <label># of Event tickets / tokens to generate</label>
+    </div>
+
+    <h2>Public Metadata</h2>
+    <div class="user-box">
+      <input type="number" name="" required="" value="0" />
+      <label>Date of Event </label>
+    </div>
+    <div class="user-box">
+      <input type="number" name="" required="" value="0" />
+      <label>Location</label>
+    </div>
+
+    <div class="user-box">    
+      <input type="text" name="" required="" />
+      <label>Time</label>
+    </div>
+
+    
+    <div class="user-box">    
+      <input type="text" name="" required="" />
+      <label>*Image File*</label>
+    </div>
+
+    <div class="user-box">    
+      <input type="text" name="" required="" />
+      <label>Initial Sell Offer</label>
+    </div>
+
+  <h2>Private Metadata</h2>
+
+  <div class="user-box">
+      <input type="checkbox" name="" required="" />
+      <label>Unique QR code</label>
+    </div>
+    
+    <div class="user-box">
+      <input type="checkbox" name="" required="" value="0" />
+      <label>Unique Taxon value</label>
+    </div>
+    
+    <a href="#">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      Submit
+    </a>
+  </form>
+  )
+  }
+}
 
 
   return (
@@ -38,37 +112,66 @@ useEffect(() => {
 | Find An Event | <br></br>
 | Collect Event NFT | <br></br>
 | How to mint an Event NFT | <br></br> 
+
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+
+
+<input
+                type="radio"
+                name="address"
+           //     value={result.ADDRESS}
+            //    checked={this.state.address === result.ADDRESS}
+            //    onChange={this.onAddressChanged}
+></input>Burn NFT
+<br></br>
+
+  <input
+                type="radio"
+                name="address"
+           //     value={result.ADDRESS}
+            //    checked={this.state.address === result.ADDRESS}
+            //    onChange={this.onAddressChanged}
+></input>Burn All NFT's
+<br></br>
+
+  <input
+                type="radio"
+                name="address"
+           //     value={result.ADDRESS}
+            //    checked={this.state.address === result.ADDRESS}
+            //    onChange={this.onAddressChanged}
+></input>Mint Event NFT's
+
+<br></br>
+
+
 </div>
 <div class="login-box">
   <h2>Event Token Generator</h2>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  
+  
+
+  {formGenerator()}
+
+</div>
+
+
+<div class="info-box">
+  
   <form>
     <div class="user-box">
       <input type="text" name="" required="" />
       <label>Account Number</label>
     </div>
-    <div class="user-box">
-      <input type="text" name="" required="" />
-      <label>Secret </label>
-    </div>
-    <div class="user-box">
-      <input type="number" name="" required="" />
-      <label>Flag Value </label>
-    </div>
-    <div class="user-box">
-      <input type="number" name="" required="" value="0" />
-      <label># of Attendees </label>
-    </div>
-    <div class="user-box">
-      <input type="text" name="" required="" />
-      <label>Image URI </label>
-    </div>
-    <a href="#">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      Submit
-    </a>
+
   </form>
 </div>
  
