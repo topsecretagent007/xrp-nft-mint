@@ -17,8 +17,9 @@ const handleChange = (event) => {
 <div>
 
 <div style={{color: "white"}}>
-Find An Event | <br></br>
-Collect Event NFT 
+| Find An Event | <br></br>
+| Collect Event NFT | <br></br>
+| How to mint an Event NFT | <br></br> 
 </div>
 <div class="login-box">
   <h2>Event Token Generator</h2>
