@@ -65,7 +65,7 @@ if(radioButton == "mintNFT"){
     </div>
 
     <div class="user-box">    
-      <input type="text" name="" required="" />
+      <input type="file" name="" required="" />
       <label>*Image File*</label>
     </div>
 
