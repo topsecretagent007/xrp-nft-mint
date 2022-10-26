@@ -6,20 +6,57 @@ import axios from 'axios'
 const App = () => {
 
 const [account, setAccount] = useState("")
+const [secret, setSecret] = useState("")
+const [numberOfTokens, setNumberOfTokens] = useState(0)
+const [response, setResponse] = useState("")
+
 const [radioButton, setRadioButton] = useState("mintNFT")
 
-const handleChange = (event) => {
+const handleAccountChange = (event) => {
+
+  console.log(event.target.value)
+  setAccount(event.target.value)
+
+}
+
+const handleSecretChange = (event) => {
 
 
-  setAccount(event.target.name)
+  setSecret(event.target.value)
+
+}
+
+const handleNumberOfTokensChange = (event) => {
+
+
+  setNumberOfTokens(event.target.value)
+
+}
+
+const handleSubmit = async() => {
+ 
+  let formData = {
+    account: account, 
+    secret: secret, 
+    numberOfTokens: numberOfTokens
+  }
+
+  
+  //const res = await axios.get('/api/mintNFT', {params: {data: JSON.stringify(formData) } } )
+  const headers = {'body': JSON.stringify(formData)}
+  let response = await fetch('/api/mintNFT', {headers})
+  setResponse(response)
+  
 
 }
 
 
 
+
+
 const getData = async() => {
   const res = await axios.get('/api/mintNFT')
-  setAccount(res.data)
+ // setAccount(res.data)
   console.log(res)
 }
 
@@ -39,21 +76,21 @@ if(radioButton == "mintNFT"){
     <form>
 
     <div class="user-box">
-      <input type="text" name="" required="" />
+      <input type="text" name="" required="" onChange={handleAccountChange} />
       <label>Account Number</label>
     </div>
 
 
     <div class="user-box">
-      <input type="text" name="" required="" />
+      <input type="text" name="" required="" onChange={handleSecretChange}/>
       <label>Secret </label>
     </div>
 
     <div class="user-box">
-      <input type="number" name="" required="" value="0" />
+      <input type="number" name="" required="" onChange={handleNumberOfTokensChange} />
       <label># of Event tickets / tokens to generate</label>
     </div>
-
+    <h2>Metadata (optional)</h2>
     <div class="user-box">    
       <input type="float" name="" required="" />
       <label>Initial Sell Offer</label>
@@ -70,7 +107,7 @@ if(radioButton == "mintNFT"){
     </div>
 
 
-    <h2>Metadata (optional)</h2>
+    
     <div class="user-box">
       <input type="number" name="" required="" value="0" />
       <label>Date of Event </label>
@@ -98,7 +135,7 @@ if(radioButton == "mintNFT"){
       <label>Unique Taxon value</label>
     </div>
     
-    <a href="#">
+    <a onClick={handleSubmit} href="#">
       <span></span>
       <span></span>
       <span></span>
