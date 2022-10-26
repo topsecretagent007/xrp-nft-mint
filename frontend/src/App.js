@@ -53,7 +53,7 @@ const handleSubmit = async() => {
 
 
 
-
+/*
 const getData = async() => {
   const res = await axios.get('/api/mintNFT')
  // setAccount(res.data)
@@ -65,7 +65,7 @@ const getData = async() => {
 useEffect(() => {
   getData()
 }, [])
-
+*/
 
 const formGenerator = () => {
   
