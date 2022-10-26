@@ -33,6 +33,8 @@ let memo = {
 
 }
 
+
+console.log(memo)
     
     const nftManager = new XrplNFTHelper({TransactionType: "NFTokenMint", 
                             Account: body.account, 
