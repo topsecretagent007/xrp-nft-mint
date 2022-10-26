@@ -24,18 +24,21 @@ router.route('/mintNFT').get((req, res) => {
             numberOfTokens: 1
 
     }
+
+    let body = JSON.parse(req.headers.body)
+    
     
     const nftManager = new XrplNFTHelper({TransactionType: "NFTokenMint", 
-                            Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd", 
-                            Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
+                            Account: body.account, 
+                            Secret:  body.secret,
                             // Fee: parseInt(314),
                             URI: xrpl.convertStringToHex("www.test.com"), 
                             Flags: parseInt(11), 
                            // NFTokenTaxon: 11111111111, 
                             NFTokenTaxon: 0x29646,
-                            Memos: memos });
+                            Memos:{numberOfTokens: parseInt(body.numberOfTokens) }});
 
-    if(memos.numberOfTokens > 1){
+    if(parseInt(body.numberOfTokens) > 1){
       nftManager.mintX().then( (result) => {
         res.send(result)
       })
@@ -43,7 +46,12 @@ router.route('/mintNFT').get((req, res) => {
       nftManager.mintToken().then( (result) => { 
         res.send(result)
     })
+    
     }
+
+
+
+
   
 
 })
