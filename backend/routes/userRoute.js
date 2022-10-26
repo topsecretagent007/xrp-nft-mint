@@ -11,34 +11,40 @@ const router = express.Router()
 
                   
 
-// express router method to create route for getting all users
+// express router method to create route minting an Event NFT
 router.route('/mintNFT').get((req, res) => {
 
-  let memos = 
-    {
-        
-            date: "10/31/2022",
-            location: "Chiang Mai, Thailand",
-            description: "Jazz club north gate",
-            image: "imgfile",
-            numberOfTokens: 1
-
-    }
-
+    //todo: check on headers.
+    //parse an string object.
     let body = JSON.parse(req.headers.body)
     
+let memo = {
+
+            date: body.date,
+            location: body.location,
+            description: body.description,
+            image: body.image,
+            numberOfTokens: parseInt(body.numberOfTokens),
+            offer: body.offer,
+            title: body.title,
+            time: body.time,
+            qrCode: true,
+            uniqueTaxon: true 
+
+}
+
     
     const nftManager = new XrplNFTHelper({TransactionType: "NFTokenMint", 
                             Account: body.account, 
                             Secret:  body.secret,
-                            // Fee: parseInt(314),
-                            URI: xrpl.convertStringToHex("www.test.com"), 
+                            URI: xrpl.convertStringToHex("ww.constant.com"), 
                             Flags: parseInt(11), 
-                           // NFTokenTaxon: 11111111111, 
-                            NFTokenTaxon: 0x29646,
-                            Memos:{numberOfTokens: parseInt(body.numberOfTokens) }});
+                            NFTokenTaxon: 0x2600,
+                            Memos: memo });
 
-    if(parseInt(body.numberOfTokens) > 1){
+
+
+    if(parseInt(memo.numberOfTokens) > 1){
       nftManager.mintX().then( (result) => {
         res.send(result)
       })
@@ -46,17 +52,13 @@ router.route('/mintNFT').get((req, res) => {
       nftManager.mintToken().then( (result) => { 
         res.send(result)
     })
+   
     
-    }
 
-
-
-
-  
-
+  }
 })
 
-
+// express router method to burn specified Event token
 router.route('/burnNFT').get((req, res) => {
 
     const nftManager = new XrplNFTHelper({TransactionType: "NFTokenBurn", 
