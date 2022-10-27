@@ -10,6 +10,7 @@ const [secret, setSecret] = useState("")
 const [numberOfTokens, setNumberOfTokens] = useState(0)
 const [response, setResponse] = useState("")
 const [radioButton, setRadioButton] = useState("mint")
+const [tokenList, setTokenList] = useState([])
 
 //metadata:
 const [date, setDate] = useState("")
@@ -21,6 +22,8 @@ const [title, settitle] = useState("")
 const [time, settime] = useState("")
 const [qrCode, setqrCode] = useState("")
 const [uniqueTaxon, setuniqueTaxon] = useState("")
+
+const [nftTokenID, setnftTokenID] = useState("")
 
 
 const handleAccountChange = (event) => {
@@ -73,15 +76,21 @@ const handleMetaChange = (event) => {
   if(event.target.name == 'uniqueTaxon'){
     setuniqueTaxon(event.target.value)
   }
+  if(event.target.name == 'nftTokenID'){
+    setnftTokenID(event.target.value)
+  }
 
 }
 
 const handleRadioButtonChange = (event) => {
   console.log(event.target.id)
   if(event.target.id === 'burn' && event.target.checked){
+    console.log("setting to burn")
     setRadioButton("burn")
   }
   if(event.target.id === 'burnAll' && event.target.checked){
+    console.log("setting to burn all")
+
     setRadioButton("burnAll")
   }
   if(event.target.id === 'mint' && event.target.checked){
@@ -95,29 +104,60 @@ const handleRadioButtonChange = (event) => {
 
 const handleSubmit = async() => {
  
+  if(radioButton == 'mint'){
   let formData = {
-    account: account, 
-    secret: secret, 
-    numberOfTokens: numberOfTokens,
-    date: date,
-   location: location,
-   description: description,
-   image: image,
-   numberOfTokens: numberOfTokens,
-   offer: offer,
-   title: title,
-   time: time,
-   qrCode: true,
-   uniqueTaxon: true 
+ 
+  account: account, 
+  secret: secret, 
+  numberOfTokens: numberOfTokens,
+  date: date,
+  location: location,
+  description: description,
+  image: image,
+  numberOfTokens: numberOfTokens,
+  offer: offer,
+  title: title,
+  time: time,
+  qrCode: true,
+  uniqueTaxon: true 
 
   }
 
   
-  //const res = await axios.get('/api/mintNFT', {params: {data: JSON.stringify(formData) } } )
   const headers = {'body': JSON.stringify(formData)}
-  let response = await fetch('/api/mintNFT', {headers})
+  let response = await fetch('http://localhost:3000/api/mintNFT', {headers})
   setResponse(response)
   
+}
+
+if(radioButton == 'burn'){
+  let formData = {
+ 
+    account: account, 
+    secret: secret, 
+    nftTokenID: nftTokenID
+  
+    }
+  
+    
+    const headers = {'body': JSON.stringify(formData)}
+    let response = await fetch('/api/burnNFT', {headers})
+    setResponse(response)
+}
+
+if(radioButton == 'burnAll'){
+  let formData = {
+ 
+    account: account, 
+    secret: secret
+  
+    }
+  
+    
+    const headers = {'body': JSON.stringify(formData)}
+    let response = await fetch('/api/burnAllNFT', {headers})
+    setResponse(response)
+}
 
 }
 
@@ -126,16 +166,37 @@ const handleSubmit = async() => {
 
 
 const getData = async() => {
-  const res = await axios.get('/api/burnAllNFT')
- // setAccount(res.data)
-  console.log(res)
-}
+  const res = await axios.get('/api/getTokens') 
+  
+  const resKeys = Object.values(res.data);
+ 
 
+const arr =  resKeys.map( (e) => {
+  console.log(e.NFTokenID)
+   return <li>{e.NFTokenID}</li>
+
+});
+
+setTokenList(arr)
+  /*
+  
+     for (let index = 0; index < res.data.length; index++) {
+      console.log(res.data[index].NFTokenID)
+
+      setTokenList(res.data, [...res.data, res.data[index].NFTokenID])
+    }
+*/
+ // const res2 = await axios.get('/api/getTokens')
+ // setAccount(res.data)
+  
+}
 
 
 useEffect(() => {
   getData()
 }, [])
+
+
 
 
 const formGenerator = () => {
@@ -145,15 +206,15 @@ const formGenerator = () => {
 if(radioButton == "mint"){
   return(
     <form>
-
+<h2>Event NFT Generator</h2>
     <div class="user-box">
-      <input type="text" name="" required="" onChange={handleAccountChange} />
+      <input type="text" name="" required=""  onChange={handleAccountChange} />
       <label>Account Number</label>
     </div>
 
 
     <div class="user-box">
-      <input type="text" name="" required="" onChange={handleSecretChange}/>
+      <input type="text" name="" required="" onChange={handleSecretChange} />
       <label>Secret </label>
     </div>
 
@@ -190,7 +251,7 @@ if(radioButton == "mint"){
     </div>
 
     <div class="user-box">    
-      <input type="text" name="time" required="" />
+      <input type="text" name="time" required="" onChange={handleMetaChange} />
       <label>Time</label>
     </div>
 
@@ -221,21 +282,21 @@ if(radioButton == "mint"){
   if(radioButton == "burn"){
     return(
     <form>   
-      
+      <h2>Burn Specified NFT</h2>
   <div class="user-box">
-    <input type="text" name="" required="" onChange={handleAccountChange} />
+    <input type="text" name="account" required="" onChange={handleAccountChange} />
     <label>Account Number</label>
   </div>
 
 
   <div class="user-box">
-    <input type="text" name="" required="" onChange={handleSecretChange}/>
+    <input type="text" name="secret" required=""  onChange={handleSecretChange}/>
     <label>Secret </label>
   </div>
 
   <div class="user-box">
-    <input type="number" name="" required="" onChange={handleNumberOfTokensChange} />
-    <label># of Event tickets / tokens to generate</label>
+    <input type="text" name="nftTokenID" required="" onChange={handleMetaChange} />
+    <label>NFT ID value:</label>
   </div>
 
 
@@ -255,15 +316,15 @@ if(radioButton == "mint"){
   if(radioButton == "burnAll"){
 return(
     <form>   
-      
+      <h2>Burn ALL NFT's in the account</h2>
   <div class="user-box">
-    <input type="text" name="" required="" onChange={handleAccountChange} />
+    <input type="text" name="account" required=""  onChange={handleAccountChange} />
     <label>Account Number</label>
   </div>
 
 
   <div class="user-box">
-    <input type="text" name="" required="" onChange={handleSecretChange}/>
+    <input type="text" name="secret" required=""  onChange={handleSecretChange}/>
     <label>Secret </label>
   </div>
   <a onClick={handleSubmit} href="#">
@@ -290,13 +351,17 @@ return(
 | Collect Event NFT | <br></br>
 | How to mint an Event NFT | <br></br> 
 
+    Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd", <br></br>
+    Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
+
 <br></br>
 <br></br>
 <br></br>
 <br></br>
 <br></br>
 
-
+<h2>Active NFT ID's:</h2>
+<ul>{tokenList}</ul>
 <input
                 type="radio"
                 name="formOption"
@@ -331,7 +396,7 @@ return(
 
 </div>
 <div class="login-box">
-  <h2>Event Token Generator</h2>
+  
     <span></span>
     <span></span>
     <span></span>
