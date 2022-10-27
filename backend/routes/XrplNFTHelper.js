@@ -187,7 +187,7 @@ async getTokenDetails(){
         account: this.transactionDetails.Account
         })
 
-        console.log(nfts.result.account_nfts.length)
+        console.log(nfts.result.account_nfts)
 
 
         await client.disconnect()

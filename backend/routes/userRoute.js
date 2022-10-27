@@ -17,7 +17,7 @@ router.route('/mintNFT').get((req, res) => {
     //todo: check on headers.
     //parse an string object.
     let body = JSON.parse(req.headers.body)
-    
+    console.log(body)
 let memo = {
 
             date: body.date,
@@ -34,7 +34,6 @@ let memo = {
 }
 
 
-console.log(memo)
     
     const nftManager = new XrplNFTHelper({TransactionType: "NFTokenMint", 
                             Account: body.account, 
@@ -63,17 +62,15 @@ console.log(memo)
 // express router method to burn specified Event token
 router.route('/burnNFT').get((req, res) => {
 
+    //todo: check on headers.
+    //parse an string object.
+    let body = JSON.parse(req.headers.body)
+    console.log(body)
+
     const nftManager = new XrplNFTHelper({TransactionType: "NFTokenBurn", 
-    Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd", 
-    Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
-    Fee: "12",
-    URI: xrpl.convertStringToHex("www.test.com"), 
-    Flags: parseInt(11), 
-    NFTokenTaxon: 0,
-    NFTokenID: "000B0000DA56C6BF9DBAFF864C3715E1B13BCCA3CFB73855DCBA29BB00000020"}); //this value should be found via post method and inside req.body                     
-    
-    
-    
+    Account: body.account, 
+    Secret:  body.secret,
+    NFTokenID: body.nftTokenID});
     
   nftManager.burnNFT().then( (result) => { 
 
@@ -85,15 +82,14 @@ router.route('/burnNFT').get((req, res) => {
 
 router.route('/burnAllNFT').get((req, res) => {
 
-  const nftManager = new XrplNFTHelper({TransactionType: "NFTokenBurn", 
-  Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd", 
-  Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
-  Fee: "12",
-  URI: xrpl.convertStringToHex("www.test.com"), 
-  Flags: parseInt(11), 
-  NFTokenTaxon: 0,
-  NFTokenID: "000B0000DA56C6BF9DBAFF864C3715E1B13BCCA3CFB73855DCBA29BB00000020"}); //this value should be found via post method and inside req.body                     
-  
+  //todo: check on headers.
+    //parse an string object.
+    let body = JSON.parse(req.headers.body)
+    console.log(body)
+
+  const nftManager = new XrplNFTHelper({TransactionType: "account_nfts", 
+  Account: body.account, 
+  Secret:  body.secret,});
 
   nftManager.burnAllNFT().then( (result) => {
     
@@ -129,12 +125,17 @@ router.route('/getTokens').get((req, res) => {
 
 })
 
+/*TODO: requires storage implementation for metadata. All metadata could be stored in JSON
+files with data requiring authentication and authorization being encrypted.
+
+
 router.route('/getTokenDetails').get((req, res) => { 
 
   const nftManager = new XrplNFTHelper({TransactionType: "nft_info", 
                                         Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd",
                                         Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
-                                        nft_id:  "000B0000DA56C6BF9DBAFF864C3715E1B13BCCA3CFB73855F7BFFFB100000016" });                        
+                                        nft_id:  "000B0000DA56C6BF9DBAFF864C3715E1B13BCCA3CFB7385562685047000000AC"
+                                      });                        
   
   
   
@@ -148,7 +149,7 @@ nftManager.getTokenDetails().then( (result) => {
 
 
 
-})
+})*/
 
 
 router.route('/syncDevMode').get((req, res) => { 
