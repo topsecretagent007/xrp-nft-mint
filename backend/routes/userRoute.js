@@ -87,7 +87,7 @@ router.route('/burnAllNFT').get((req, res) => {
     let body = JSON.parse(req.headers.body)
     console.log(body)
 
-  const nftManager = new XrplNFTHelper({TransactionType: "account_nfts", 
+  const nftManager = new XrplNFTHelper({TransactionType: "NFTokenBurn", 
   Account: body.account, 
   Secret:  body.secret,});
 
