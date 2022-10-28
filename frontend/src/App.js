@@ -127,7 +127,7 @@ const handleSubmit = async() => {
   const headers = {'body': JSON.stringify(formData)}
   let response = await fetch('http://localhost:3000/api/mintNFT', {headers})
   console.log(response)
-  getData();
+  setResponse(response)
   
 }
 
@@ -197,7 +197,7 @@ setTokenList(resData)
 
 useEffect(() => {
   getData()
-})
+}, [response])
 
 
 
