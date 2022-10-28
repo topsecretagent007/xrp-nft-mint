@@ -126,7 +126,8 @@ const handleSubmit = async() => {
   
   const headers = {'body': JSON.stringify(formData)}
   let response = await fetch('http://localhost:3000/api/mintNFT', {headers})
-  setResponse(response)
+  console.log(response)
+  getData();
   
 }
 
@@ -157,6 +158,7 @@ if(radioButton == 'burnAll'){
     const headers = {'body': JSON.stringify(formData)}
     let response = await fetch('/api/burnAllNFT', {headers})
     setResponse(response)
+    
 }
 
 }
@@ -168,16 +170,17 @@ if(radioButton == 'burnAll'){
 const getData = async() => {
   const res = await axios.get('/api/getTokens') 
   
-  const resKeys = Object.values(res.data);
+  console.log(res)
+  //const resKeys = Object.values(res.data);
  
 
-const arr =  resKeys.map( (e) => {
-  console.log(e.NFTokenID)
-   return <li>{e.NFTokenID}</li>
+const resData =  res.data.map( (e) => {
+  //console.log(e.NFTokenID)
+   return <li>{e}</li>
 
 });
 
-setTokenList(arr)
+setTokenList(resData)
   /*
   
      for (let index = 0; index < res.data.length; index++) {
@@ -194,7 +197,7 @@ setTokenList(arr)
 
 useEffect(() => {
   getData()
-}, [])
+})
 
 
 
