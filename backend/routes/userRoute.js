@@ -4,6 +4,10 @@ import express from 'express'
 import XrplNFTHelper from './XrplNFTHelper.js';
 import xrpl from "xrpl";
 
+import fs from "fs";
+
+
+
 
 const router = express.Router()
 
@@ -20,7 +24,7 @@ router.route('/mintNFT').get((req, res) => {
     let body = JSON.parse(req.headers.body)
     
 let memo = {
-
+            NFTokenID: "",
             date: body.date,
             location: body.location,
             description: body.description,
@@ -51,13 +55,43 @@ let memo = {
 
       //RETURNS: array of new NFTokenID's
       nftManager.mintX().then( (result) => {
+       
+        //for each item adjust the memo NFTokenID value.
+        //for each item in result store a json file.
         console.log(result)
+
+        for(let index = 0; index <= result.length; index++){
+          memo.NFTokenID = result[index];
+         
+          let data = JSON.stringify(memo);
+          
+          //write to local storage
+          //TODO: write to cloud
+          fs.writeFileSync(`${memo.NFTokenID}.json`, data);
+        
+        }
+
         res.send(result)
       })
     }else{
       //RETURNS:  new NFTokenID
       nftManager.mintToken().then( (result) => {
         
+        memo.NFTokenID = result;
+        console.log("storing to file")
+        //store memo in file with NFTokenID as reference
+        //TODO: STORE MEMO IN CLOUD.
+        let data = JSON.stringify(memo);
+        fs.writeFileSync(`${memo.NFTokenID}.json`, data);
+        
+        /*
+        fs.readFile(`${memo.NFTokenID}`, (err,data) => {
+          if(err) throw err;
+          let jsonData = JSON.parse(data);
+          console.log(jsonData)
+        })*/
+      
+
         res.send(result)
     })
    
@@ -81,6 +115,10 @@ router.route('/burnNFT').get((req, res) => {
     
   nftManager.burnNFT().then( (result) => { 
 
+    //remove corresponding metadata from storage
+    var filePath = `${body.nftTokenID}.json`; 
+    fs.unlinkSync(filePath);
+   
     res.send(result)
 
   })
@@ -100,6 +138,15 @@ router.route('/burnAllNFT').get((req, res) => {
 
   nftManager.burnAllNFT().then( (result) => {
     
+
+    //REMOVE metadata from storage.
+    for(let index = 0; index < result.length; index++){
+    
+      fs.unlinkSync(`${result[index].NFTokenID}.json`)
+    
+    }
+  
+   
     res.send(result)
        
   });
