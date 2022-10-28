@@ -5,6 +5,7 @@ import XrplNFTHelper from './XrplNFTHelper.js';
 import xrpl from "xrpl";
 
 import fs from "fs";
+import path from 'path';
 
 
 
@@ -67,7 +68,7 @@ let memo = {
           
           //write to local storage
           //TODO: write to cloud
-          fs.writeFileSync(`${memo.NFTokenID}.json`, data);
+          fs.writeFileSync(`./nfts/${memo.NFTokenID}`, data);
         
         }
 
@@ -82,7 +83,7 @@ let memo = {
         //store memo in file with NFTokenID as reference
         //TODO: STORE MEMO IN CLOUD.
         let data = JSON.stringify(memo);
-        fs.writeFileSync(`${memo.NFTokenID}.json`, data);
+        fs.writeFileSync(`./nfts/${memo.NFTokenID}`, data);
         
         /*
         fs.readFile(`${memo.NFTokenID}`, (err,data) => {
@@ -116,7 +117,7 @@ router.route('/burnNFT').get((req, res) => {
   nftManager.burnNFT().then( (result) => { 
 
     //remove corresponding metadata from storage
-    var filePath = `${body.nftTokenID}.json`; 
+    var filePath = `./nfts/${body.nftTokenID}`; 
     fs.unlinkSync(filePath);
    
     res.send(result)
@@ -142,7 +143,7 @@ router.route('/burnAllNFT').get((req, res) => {
     //REMOVE metadata from storage.
     for(let index = 0; index < result.length; index++){
     
-      fs.unlinkSync(`${result[index].NFTokenID}.json`)
+      fs.unlinkSync(`./nfts/${result[index].NFTokenID}`)
     
     }
   
@@ -161,19 +162,23 @@ router.route('/burnAllNFT').get((req, res) => {
 //Get all tokens for specified account.
 router.route('/getTokens').get((req, res) => {
 
+  /*DEFAULT account
     const nftManager = new XrplNFTHelper({TransactionType: "account_nfts", 
                                           Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd",
                                           Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",});                        
-    
-    
-    
-    
+    */
+
+    const jsonsInDir = fs.readdirSync('./nfts/')
+    let str = JSON.stringify(jsonsInDir);
+    res.send(str);
+  
+  /*
   nftManager.getTokens().then( (result) => {
 
     res.send(result)
     
   });
-
+ */
   
 
 
@@ -206,25 +211,6 @@ nftManager.getTokenDetails().then( (result) => {
 })*/
 
 
-router.route('/syncDevMode').get((req, res) => { 
 
-  const nftManager = new XrplNFTHelper({TransactionType: "nft_info", 
-                                        Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd",
-                                        Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
-                                       });                        
-  
-  
-  
-  
-nftManager.syncDevMode().then( (result) => {
-
-  res.send(result)
-  
-});
-
-
-
-
-})
 
 export default router
