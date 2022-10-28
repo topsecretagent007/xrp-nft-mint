@@ -12,12 +12,13 @@ const router = express.Router()
                   
 
 // express router method to create route minting an Event NFT
+//RETURNS: array of new NFTokenID's OR single NFTokenID
 router.route('/mintNFT').get((req, res) => {
 
     //todo: check on headers.
     //parse an string object.
     let body = JSON.parse(req.headers.body)
-    console.log(body)
+    
 let memo = {
 
             date: body.date,
@@ -45,12 +46,18 @@ let memo = {
 
 
 
+    
     if(parseInt(memo.numberOfTokens) > 1){
+
+      //RETURNS: array of new NFTokenID's
       nftManager.mintX().then( (result) => {
+        console.log(result)
         res.send(result)
       })
     }else{
-      nftManager.mintToken().then( (result) => { 
+      //RETURNS:  new NFTokenID
+      nftManager.mintToken().then( (result) => {
+        
         res.send(result)
     })
    
