@@ -157,7 +157,7 @@ Expects Stringified JSON object with the following key, value pairs.
 }
 
 @Returns
-
+-String (Transaction Result)
 ```
 
 
@@ -173,6 +173,7 @@ Expects Stringified JSON object with the following key, value pairs.
 }
 
 @Returns
+Stringified JSON object array with list of removed tokens.
 
 
 ```
