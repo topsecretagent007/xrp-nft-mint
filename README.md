@@ -125,6 +125,109 @@ let response = await fetch('/api/mintNFT', {headers})
 ```
 
 
+# Rest API Specifications: 
+
 - /api/mintNFT Mints the specified amount of tokens.
+
+```
+Expects Stringified JSON object with the following key, value pairs.
+*Please note: these are required. Additional metadata can be attached to memo object.
+
+{
+  account: String, 
+  secret:  String,
+  numberOfTokens: String //body header should contain a string that represents an int.
+}
+
+@Returns
+
+```
+
+
+
+- /burnNFT Burn specified Event token.
+
+```
+Expects Stringified JSON object with the following key, value pairs.
+
+{
+    account: String, 
+    secret:  String,
+    nftTokenID: String
+}
+
+@Returns
+
+```
+
+
+
+- /burnAllNFT Burn all NFTs in the account.
+
+```
+Expects Stringified JSON object with the following key, value pairs.
+
+{
+    account: String, 
+    secret:  String,
+}
+
+@Returns
+
+
+```
+
+
+- /getTokens Get all NFT's from storage.
+
+```
+
+@Returns Stringified JSON object Array of NFTokenID strings that currently exist in metadata storage
+
+
+```
+
+
+
+- /getTokensFromLedger Get all NFT's from ledger.
+
+```
+
+Expects Stringified JSON object with the following key, value pairs.
+
+{
+    account: String
+}
+
+@Returns Stringified JSON object Array of NFTokenID strings that currently exist per the ledger
+
+
+```
+
+
+- /getData Get all metadata.
+```
+
+Expects Stringified JSON object with the following key, value pairs.
+
+{
+    {
+    nftTokenID: String
+}
+}
+
+@Returns Stringified JSON object with a memo object containing all details.
+
+
+```
+
+
+
+
+
+
+
+
+
 
 
