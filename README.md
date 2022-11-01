@@ -1,37 +1,24 @@
 # XRPL-NFT-Proof-of-Attendance-Infrastructure
-XRPL-Proof-of-Attendance-Infrastructure/backend/routes/XrplNFTHelper.js
 
-**XrplNFTHelper.js** is designed to work within any NodeJS project. As an example, I have provided a working MERN (mongo has been disconnected) application that implemenents **XrplNFTHelper.js**.
+XRPL-NFT-Proof-of-Attendance-Infrastructure is a MERN stack application that contains functionality to allow event organizers to mint and distribute Attendance NFTs on the XRP Ledger. The core parts of this application consist of a React frontend, Express backend, **Rest API**, and **XrplNFTHelper.js**. Please note, mongo has been disconnected. Any db solution can replace it but isn't needed at this point. All metadata storage for the NFT's is currently stored locally is JSON object files. In a live version these files will need to be stored in a location with a public URI. 
 
-**XrplNFTHelper.js** is a Javascript class that contains functionality that allows event organizers to mint and distribute Attendance NFTs on the XRP Ledger.
+**XrplNFTHelper.js** is Javascript class that is meant to be used within any NodeJS project. It contains functionality that allows event organizers to mint and distribute Attendance NFTs on the XRP Ledger. It is meant to be imported and instantiated inside the routes file of your project.
 
-**XrplNFTHelper.js** is meant to be imported and instantiated inside the routes file of your project. A working route for each one of the classes functions has been provided in this example. The necessary transaction data has been hard coded into the routes for sake of ease. 
-
-In a production version the frontend will make post/get calls with details of the transaction and this will be handled in the req.body inside the routes file on the backend.
+**Instantiating XrpNFTHelper.js**
+Please note, the XrpNFTHelper class has a constructor that takes a javascript object. Before performing a transaction on the ledger certain details are required, depending on the type of transaction (All required paramaters are listed in the comments). These details are passed during the instantiation of XrpNFTHelper class.
 
 ```
 import XrplNFTHelper from './XrplNFTHelper.js';
-import xrpl from "xrpl";
 
-router.route('/mintNFT').get((req, res) => {
-    
-    
-    //**TYPICALLY WE WANT TO GET FOLLOWING TRANSACTION DATA FROM req.body
-    
-    const nftManager = new XrplNFTHelper({TransactionType: "NFTokenMint", 
-                            Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd", 
-                            Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
-                            // Fee: parseInt(314),
-                            URI: xrpl.convertStringToHex("www.test.com"), 
-                            Flags: parseInt(11), 
-                            NFTokenTaxon: 0});
+router.route('/burnAllNFT').get((req, res) => {
 
-    nftManager.mintToken().then( (result) => { 
-        res.send(result)
-    })
+  const nftManager = new XrplNFTHelper({TransactionType: "NFTokenBurn", 
+  Account: body.account, 
+  Secret:  body.secret,});
 
-
-})
+  nftManager.burnAllNFT().then( (result) => { return result }) 
+  
+  })
 ```
 
 # Install and use the developer example
