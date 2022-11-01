@@ -43,6 +43,18 @@ router.route('/burnAllNFT').get((req, res) => {
 # XrpNFTHelper.js Functions
 
 - mintToken() Mint Single token.
+ 
+
+   @Params (required)
+  -TransactionType: this.transactionDetails.TransactionType,
+  -Account: this.transactionDetails.Account,
+  -URI: this.transactionDetails.URI,
+  -Flags: this.transactionDetails.Flags,
+   -NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+   
+    
+   @returns NFTokenID string
+ 
 
 - mintX() Mint any number of tokens with identical info.
 
