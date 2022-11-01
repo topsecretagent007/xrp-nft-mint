@@ -84,7 +84,7 @@ Account: this.transactionDetails.Account
 @returns array of NFTokenID's strings
 ```
 
-- burnNFT() specified NFT.
+- burnNFT() Burn specified NFT.
 
 ```
 
@@ -210,11 +210,11 @@ Expects Stringified JSON object with the following key, value pairs.
 
 Expects Stringified JSON object with the following key, value pairs.
 
-{
-    {
+
+  {
     nftTokenID: String
-}
-}
+  }
+
 
 @Returns Stringified JSON object with a memo object containing all details.
 
