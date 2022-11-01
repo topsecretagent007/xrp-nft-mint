@@ -110,6 +110,21 @@ Params (required class object variables):
 
 # Rest API - nftRoutes.js
 
-The rest API is located at 
+The rest API is located at XRPL-NFT-Proof-of-Attendance-Infrastructure/backend/routes/nftRoutes.js. 
+
+There are currently 6 GET routes (listed below) that create a class object of XrpNFTHelper.js based on paramaters passed via the body header of a GET request. Each route expects a stringified JSON object. 
+
+For example, in a react front end the /mintNFT route is properly accessed as such:
+
+```
+const headers = {'body': JSON.stringify(formData)}
+
+let response = await fetch('/api/mintNFT', {headers})
+  setResponse(response)
+
+```
+
+
+- /api/mintNFT Mints the specified amount of tokens.
 
 
