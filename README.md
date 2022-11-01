@@ -45,7 +45,7 @@ router.route('/burnAllNFT').get((req, res) => {
 - mintToken() Mint Single token.
  
 
-   @Params (required)
+   @Params (required class object variables) - created during instantiation of XrpNFTHelper.js
    ```
   TransactionType: this.transactionDetails.TransactionType,
   Account: this.transactionDetails.Account,
@@ -59,11 +59,51 @@ router.route('/burnAllNFT').get((req, res) => {
 
 - mintX() Mint any number of tokens with identical info.
 
+  ```
+
+  @Params (required class object variables)
+  TransactionType: this.transactionDetails.TransactionType,
+  Account: this.transactionDetails.Account,
+  URI: this.transactionDetails.URI,
+  Flags: this.transactionDetails.Flags,
+  NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+
+  @returns array of NFTokenID strings
+  
+  ```
+
 - getTokensFromLedger() Get all tokens from the ledger.
+
+```
+@Params (required class object variables)
+
+Account: this.transactionDetails.Account
+
+@returns array of NFTokenID's strings
+```
 
 - burnNFT() specified NFT.
 
+```
+
+Params (required class object variables): 
+          TransactionType: this.transactionDetails.TransactionType,
+          Account: this.transactionDetails.Account,
+          NFTokenID: this.transactionDetails.NFTokenID
+
+  @Returns: String Transaction Result.
+```
+
 - burnAllNFT() Burn all NFTs in the account.
+```
+  Params (required class object variables): 
+  transactionDetails.Secret
+  transactionDetails.Account
+
+  @Returns: 
+  Array of NFTokenID's for removal of metadata storage
+
+```
 
 
 
