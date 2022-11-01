@@ -1,6 +1,6 @@
 # XRPL-NFT-Proof-of-Attendance-Infrastructure
 
-XRPL-NFT-Proof-of-Attendance-Infrastructure is a MERN stack application that contains functionality to allow event organizers to mint and distribute Attendance NFTs on the XRP Ledger. The core parts of this application consist of a React frontend, Express backend, **Rest API**, and **XrplNFTHelper.js**. Please note, mongo has been disconnected. Any db solution can replace it but isn't needed at this point. All metadata storage for the NFT's is currently stored locally is JSON object files. In a live version these files will need to be stored in a location with a public URI. 
+XRPL-NFT-Proof-of-Attendance-Infrastructure is a MERN stack application that contains functionality to allow event organizers to mint and distribute Attendance NFTs on the XRP Ledger. The core parts of this application consist of a React frontend, Express backend, **Rest API (nftRoutes.js)**, and **XrplNFTHelper.js**. Please note, mongo has been disconnected. Any db solution can replace it but isn't needed at this point. All metadata storage for the NFT's is currently stored locally is JSON object files. In a live version these files will need to be stored in a location with a public URI. 
 
 
 # Install and use the developer example
@@ -52,9 +52,11 @@ router.route('/burnAllNFT').get((req, res) => {
   URI: this.transactionDetails.URI,
   Flags: this.transactionDetails.Flags,
   NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+  
+  @returns NFTokenID string
    ```
     
-   @returns NFTokenID string
+   
  
 
 - mintX() Mint any number of tokens with identical info.
@@ -106,8 +108,8 @@ Params (required class object variables):
 ```
 
 
+# Rest API - nftRoutes.js
+
+The rest API is located at 
 
 
-
-
-``
