@@ -15,8 +15,16 @@ export class XrplNFTHelper {
 
 
   /* Mint Single token
-  * 
-  * @returns "tesSUCCESS" if successful
+
+  * @Params (required)
+  -TransactionType: this.transactionDetails.TransactionType,
+  -Account: this.transactionDetails.Account,
+  -URI: this.transactionDetails.URI,
+  -Flags: this.transactionDetails.Flags,
+   -NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+   
+  @returns array of NFTokenID strings
+  * @returns NFTokenID string
   */
   async mintToken(){
     try {
@@ -68,11 +76,6 @@ export class XrplNFTHelper {
    return result.result.account_nfts[result.result.account_nfts.length -1].NFTokenID
 
    
-
-   
-
-  
-
   /* Check transaction results -------------------------------------------------
     console.log("Transaction result:", tx.result.meta.TransactionResult)
 	  console.log("Balance changes:",
@@ -90,16 +93,16 @@ catch(err) {
 
 /* Mint X number of identical tokens
 * Assign all to same wallet
-*
-* Transaction detail requirements: 
-  this.transactionDetails.numberOfTokens - #number of tokens to mint.
-  this.transactionDetails.TransactionType,
-	this.transactionDetails.Account,
-  this.transactionDetails.Fee,
-	this.transactionDetails.URI,
-	this.transactionDetails.Flags,
-	this.transactionDetails.NFTokenTaxon
-*
+
+
+  @Params (required)
+  -TransactionType: this.transactionDetails.TransactionType,
+  -Account: this.transactionDetails.Account,
+  -URI: this.transactionDetails.URI,
+  -Flags: this.transactionDetails.Flags,
+   -NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+
+  @returns array of NFTokenID strings
 */
   async mintX(){
     try {
@@ -124,8 +127,6 @@ catch(err) {
 
         
       console.log("Connected to server..minting " + this.transactionDetails.Memos.numberOfTokens + " tokens")
-
-
 
 
       const transactionData = {
@@ -188,30 +189,11 @@ catch(err) {
   }
 
 
-  /*Assign token to wallet
-  *@param tokenID token id to assign
-  *@returns new wallet with token assigned.
-  */
-  async assignToWallet(){
-    try {
-     
-  
-  
-  
-  }
-  catch(err) {
-  console.log("Error occured during assignToWallet() call" + err)
-  return;
-  }
-  
-  }
-
-
   /*getTokens
   *
-  *@returns array of tokens
+  *@returns array of NFTokenID's
   */
-async getTokens(){
+async getTokensFromLedger(){
   try {
 
     console.log("Connected to Sandbox..getting all NFT's.")
@@ -235,39 +217,7 @@ async getTokens(){
 
 }
 catch(err) {
-console.log("Error occured during assignToWallet() call" + err)
-return;
-}
-
-}
-
-//getTokenDetails
-async getTokenDetails(){
-  try {
-    
-
-      //const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
-      const client = new xrpl.Client(this.clientDetails)
-      await client.connect()
-
-
-      let nfts = await client.request({
-        method: "account_nfts",
-        account: this.transactionDetails.Account
-        })
-
-        console.log(nfts.result.account_nfts)
-
-
-        await client.disconnect()
-
-        return nfts.result
-
-
-
-}
-catch(err) {
-console.log("Error occured during assignToWallet() call" + err)
+console.log("Error occured during getTokens() call" + err)
 return;
 }
 
@@ -275,7 +225,12 @@ return;
 
 
 /* Burn specified NFT
-*
+* Params (required): 
+          - TransactionType: this.transactionDetails.TransactionType,
+          - Account: this.transactionDetails.Account,
+          - NFTokenID: this.transactionDetails.NFTokenID
+
+  Returns: Transaction Result string.
 *
 */
   async burnNFT(){
@@ -289,7 +244,7 @@ return;
       console.log("Connected to Sandbox..burning single NFT.")
 
    
-    // Prepare transactdion -------------------------------------------------------
+    
     const transactionData = {
           TransactionType: this.transactionDetails.TransactionType,
           Account: this.transactionDetails.Account,
@@ -297,17 +252,19 @@ return;
       }
       
     
-      // Submit signed blob --------------------------------------------------------
+      
       const tx = await client.submitAndWait(transactionData,{wallet})
   
       // Check transaction results -------------------------------------------------
-     console.log("Transaction result:", tx.result.meta.TransactionResult)
+      /*
+      console.log("Transaction result:", tx.result.meta.TransactionResult)
       console.log("Balance changes:",
         JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
-      client.disconnect()
+      
       console.log("Disconnected..Done burning single NFT.")
-       /*  */
+        */
 
+      client.disconnect()
       return tx.result.meta.TransactionResult
 
 }
@@ -320,6 +277,15 @@ catch(err) {
 
 
   /*Burn all NFTs in the account
+
+  Params (required): 
+  - transactionDetails.Secret
+  - transactionDetails.Account
+
+  Returns: 
+  Array of NFTokenID's for removal of metadata storage
+
+
   */
 
 
@@ -355,7 +321,7 @@ catch(err) {
         }
         
         console.log("END.. All NFT's burned")
-        return "Done";
+        return nfts.result.account_nfts;
 
 }
 catch(err) {
@@ -365,49 +331,7 @@ catch(err) {
   
   }
 
-//syncDevMode
-async syncDevMode(){
-  try {
-    
-    let student = { 
-      name: 'Mike',
-      age: 23, 
-      gender: 'Male',
-      department: 'English',
-      car: 'Honda' 
-  };
-   
-  let data = JSON.stringify(student);
-  fs.writeFileSync('student-2.json', data);
-  return "done"
 
-      //const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
-     /*
-      const client = new xrpl.Client(this.clientDetails)
-      await client.connect()
-
-
-      let nfts = await client.request({
-        method: "account_nfts",
-        account: this.transactionDetails.Account
-        })
-
-        console.log(nfts.result.account_nfts.length)
-
-
-        await client.disconnect()
-
-        return nfts.result
-
-*/
-
-}
-catch(err) {
-console.log("Error occured during assignToWallet() call" + err)
-return;
-}
-
-}
 
 
 }
