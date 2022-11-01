@@ -46,12 +46,13 @@ router.route('/burnAllNFT').get((req, res) => {
  
 
    @Params (required)
-  -TransactionType: this.transactionDetails.TransactionType,
-  -Account: this.transactionDetails.Account,
-  -URI: this.transactionDetails.URI,
-  -Flags: this.transactionDetails.Flags,
-   -NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
-   
+   ```
+  TransactionType: this.transactionDetails.TransactionType,
+  Account: this.transactionDetails.Account,
+  URI: this.transactionDetails.URI,
+  Flags: this.transactionDetails.Flags,
+  NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
+   ```
     
    @returns NFTokenID string
  
