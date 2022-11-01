@@ -131,7 +131,7 @@ let response = await fetch('/api/mintNFT', {headers})
 
 ```
 Expects Stringified JSON object with the following key, value pairs.
-*Please note: these are required. Additional metadata can be attached to memo object.
+*Please note: these are required. Additional metadata can be attached to memo key.
 
 {
   account: String, 
