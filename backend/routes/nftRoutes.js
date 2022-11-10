@@ -49,16 +49,16 @@ let memo = {
 
 
 
-    console.log(memo.numberOfTokens)                
+                   
     
     if(parseInt(memo.numberOfTokens) > 1){
 
       
-      nftManager.mintX().then( (result) => {
+      nftManager.batchX().then( (result) => {
        
         //for each item adjust the memo NFTokenID value.
         //for each item in result store a json file.
-        for(let index = 0; index <= result.length; index++){
+       /* for(let index = 0; index <= result.length; index++){
           memo.NFTokenID = result[index];
          
           let data = JSON.stringify(memo);
@@ -68,7 +68,8 @@ let memo = {
           fs.writeFileSync(`./nfts/${memo.NFTokenID}`, data);
         
         }
-
+*/
+console.log(result)
         //RETURNS: array of NFTokenID's
         res.send(result)
 
@@ -155,11 +156,11 @@ router.route('/burnAllNFT').get((req, res) => {
     
 
     //REMOVE metadata from storage.
-    for(let index = 0; index < result.length; index++){
+   /* for(let index = 0; index < result.length; index++){
     
       fs.unlinkSync(`./nfts/${result[index].NFTokenID}`)
     
-    }
+    }*/
   
     console.log(result)
     res.send(result)
@@ -181,7 +182,7 @@ router.route('/getTokens').get((req, res) => {
 
   
     const jsonsInDir = fs.readdirSync('./nfts/')
-    let str = JSON.stringify(jsonsInDir);
+  //  let str = JSON.stringify(jsonsInDir);
     console.log(str)
     res.send(str);
   
@@ -201,14 +202,15 @@ router.route('/getTokensFromLedger').get((req, res) => {
 
 
   
-  let body = JSON.parse(req.headers.body)
+  //let body = JSON.parse(req.headers.body)
     
-
-  const nftManager = new XrplNFTHelper({ Account: body.account
+  
+  const nftManager = new XrplNFTHelper({ Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd"
   });
 
   nftManager.getTokensFromLedger().then( (result) => {
-
+    console.log("getTokensFromLedger Result:")
+    console.log(result)
     res.send(result)
 
   })
