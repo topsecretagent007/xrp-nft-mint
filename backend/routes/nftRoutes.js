@@ -38,7 +38,7 @@ let memo = {
 }
 
 
-    
+    console.log("minting + " + memo.numberOfTokens)
     const nftManager = new XrplNFTHelper({TransactionType: "NFTokenMint", 
                             Account: body.account, 
                             Secret:  body.secret,
@@ -55,10 +55,15 @@ let memo = {
 
       
       nftManager.batchX().then( (result) => {
-       
-        //for each item adjust the memo NFTokenID value.
+       // for(let index = 0; index <= result.length; index++){
+
+          console.log("****************")
+          console.log(result)
+          console.log("**********************")
+       // }
+        //for each item adjust the memo NFTokenID value. NFTokenID
         //for each item in result store a json file.
-       /* for(let index = 0; index <= result.length; index++){
+      /*  for(let index = 0; index <= result.length; index++){
           memo.NFTokenID = result[index];
          
           let data = JSON.stringify(memo);
@@ -67,9 +72,9 @@ let memo = {
           //TODO: write to cloud
           fs.writeFileSync(`./nfts/${memo.NFTokenID}`, data);
         
-        }
-*/
-console.log(result)
+        }*/
+
+
         //RETURNS: array of NFTokenID's
         res.send(result)
 

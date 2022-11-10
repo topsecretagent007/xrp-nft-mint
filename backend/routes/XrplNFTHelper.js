@@ -172,8 +172,10 @@ async batchX(){
       limit: 400
     })
     
-    console.log(nfts.result)
-    while (nfts.result.marker != null)
+    console.log(nfts)
+    console.log("------------")
+   
+    for(let i = 0; i <= nftokenCount; i++)
     {
           nfts = await client.request({
               method: "account_nfts",
@@ -181,16 +183,21 @@ async batchX(){
               limit: 400,
               marker: nfts.result.marker
           })
-          console.log(nfts.result)
-          console.log("*************")
-          console.log(JSON.stringify(nfts,null,2))
+        
+        //  setTimeout(()=>{}, 5000)
+        /*
+          console.log(nfts)
+    console.log("11111111111111")
+    console.log(JSON.stringify(nfts,null,2))
+    console.log("11111111111111111")*/
 
+    }
 
-          return nfts.result.account_nfts
   }
+    return nfts.result.account_nfts
 
 
-}
+
   }
 catch(err) {
 console.log("Error occured during batchX() call" + err)
