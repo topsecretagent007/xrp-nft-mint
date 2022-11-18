@@ -11,6 +11,7 @@ const [numberOfTokens, setNumberOfTokens] = useState(0)
 const [response, setResponse] = useState("")
 const [radioButton, setRadioButton] = useState("mint")
 const [tokenList, setTokenList] = useState([])
+const [messages, setMessages] = useState(["Welcome<br>", "Please do system checkes before continuing.."])
 
 //metadata:
 const [date, setDate] = useState("")
@@ -125,7 +126,7 @@ const handleSubmit = async() => {
 
   
   const headers = {'body': JSON.stringify(formData)}
-  let response = await fetch('http://localhost:3000/api/mintNFT', {headers})
+  let response = await fetch('/api/mintNFT', {headers})
   console.log(response)
   setResponse(response)
   
@@ -168,15 +169,24 @@ if(radioButton == 'burnAll'){
 
 
 const getData = async() => {
-  const res = await axios.get('/api/getTokens') 
+
+
+
+  const xummRes = await axios.get('/api/xummPayload') 
   
-  console.log(res)
-  //const resKeys = Object.values(res.data);
- 
+  let newArr = messages.map(e => {
+    return e;
+  })
+
+  newArr.push(<h2>Retrieving token id's from ledger..</h2>)
+  
+
+  const res = await axios.get('/api/getTokensFromLedger') 
+  
 
 const resData =  res.data.map( (e) => {
-  //console.log(e.NFTokenID)
-   return <li>{e}</li>
+ 
+  return <li>{e.NFTokenID}</li>
 
 });
 
@@ -196,8 +206,11 @@ setTokenList(resData)
 
 
 useEffect(() => {
+
+  
+
   getData()
-}, [response])
+}, [response,messages])
 
 
 
@@ -205,69 +218,75 @@ useEffect(() => {
 const formGenerator = () => {
   
 
-  
+    
 if(radioButton == "mint"){
   return(
-    <form>
+    <form class="command-container">
 <h2>Event NFT Generator</h2>
+
+    <label>Account Number</label>
     <div class="user-box">
-      <input type="text" name="" required=""  onChange={handleAccountChange} />
-      <label>Account Number</label>
+      <input type="text" name="" required=""  onChange={handleAccountChange} /> 
     </div>
 
-
+    <label>Secret </label>
     <div class="user-box">
       <input type="text" name="" required="" onChange={handleSecretChange} />
-      <label>Secret </label>
     </div>
 
+    <label># of Event tickets / tokens to generate</label>
     <div class="user-box">
       <input type="number" name="" required="" onChange={handleNumberOfTokensChange} />
-      <label># of Event tickets / tokens to generate</label>
     </div>
     <h2>Metadata (optional)</h2>
+    
+    <label>Initial Sell Offer</label>
     <div class="user-box">    
       <input type="float" name="offer" required="" onChange={handleMetaChange}/>
-      <label>Initial Sell Offer</label>
     </div>
 
+    <label>Event Title</label>
     <div class="user-box">    
       <input type="text" name="title" required="" onChange={handleMetaChange}/>
-      <label>Event Title</label>
+      
     </div>
 
+    <label>*Image File*</label>
     <div class="user-box">    
       <input type="file" name="image" required="" onChange={handleMetaChange}/>
-      <label>*Image File*</label>
+      
     </div>
 
 
-    
+    <label>Date of Event </label>
     <div class="user-box">
       <input type="date" name="date" required="" onChange={handleMetaChange} />
-      <label>Date of Event </label>
+      
     </div>
 
+    <label>Location</label>
     <div class="user-box">
       <input type="text" name="location" required="" onChange={handleMetaChange} />
-      <label>Location</label>
+      
     </div>
 
+    <label>Time</label>
     <div class="user-box">    
       <input type="text" name="time" required="" onChange={handleMetaChange} />
-      <label>Time</label>
+      
     </div>
 
   
-
+  <label>Unique QR code</label>
   <div class="user-box">
       <input type="checkbox" name="" required="" />
-      <label>Unique QR code</label>
+     
     </div>
     
+    <label>Unique Taxon value</label>
     <div class="user-box">
       <input type="checkbox" name="" required="" value="0" />
-      <label>Unique Taxon value</label>
+      
     </div>
     
     <a onClick={handleSubmit} href="#">
@@ -347,15 +366,32 @@ return(
 
 
   return (
-<div>
 
-<div style={{color: "white"}}>
-| Find An Event | <br></br>
-| Collect Event NFT | <br></br>
-| How to mint an Event NFT | <br></br> 
+<div class="primaryDiv">
 
+    <div class="navbarbox">
+    <div class="navbaritem">
+    | Find An Event |
+     </div>  
+    <div class="navbaritem">
+    | Collect Event NFT |
+    </div>
+    <div class="navbaritem"> 
+    | How to mint an Event NFT |
+     </div> 
+
+    </div>
+
+<div class="displaycontainer">
+
+<div class="cardBox">
+
+<h1 style={{color: 'lightskyblue', textDecoration: 'underline'}}>God Mode</h1>
+
+<h6>
     Account: "rLu7G9VDPpvFoqQJRpZZQc2QNDbUhxafJd", <br></br>
     Secret:  "ssTkdDoL3i6SGoDjFwjtkmFpM3SAi",
+    </h6>
 
 <br></br>
 <br></br>
@@ -365,111 +401,38 @@ return(
 
 <h2>Active NFT ID's:</h2>
 <ul>{tokenList}</ul>
-<input
-                type="radio"
-                name="formOption"
-                id="burn"
-           //     value={result.ADDRESS}
-            //    checked={this.state.address === result.ADDRESS}
-                 onChange={handleRadioButtonChange}
-></input>Burn NFT
-<br></br>
 
-  <input
-                type="radio"
-                name="formOption"
-                id="burnAll"
-           //     value={result.ADDRESS}
-            //    checked={this.state.address === result.ADDRESS}
-            onChange={handleRadioButtonChange}
-></input>Burn All NFT's
-<br></br>
-
-  <input
-                type="radio"
-                name="formOption"
-                id="mint"
-           //     value={result.ADDRESS}
-            //    checked={this.state.address === result.ADDRESS}
-            onChange={handleRadioButtonChange}
-></input>Mint Event NFT's
-
-<br></br>
-
+<h2>Server Response Box</h2>
+<div class="testtextarea">{messages}</div>
 
 </div>
-<div class="login-box">
-  
+
+<div class="flex-item commandBox">
+
+<div class="flex-container radio-items">
+<input style={{height: "20px", width: "50px"}} type="radio" name="formOption" id="burn" onChange={handleRadioButtonChange}></input><label>Burn NFT</label>
+
+<input style={{height: "20px", width: "50px"}} type="radio" name="formOption" id="burnAll" onChange={handleRadioButtonChange}></input>Burn All NFT's
+
+<input style={{height: "20px", width: "50px"}} type="radio" name="formOption"  id="mint" onChange={handleRadioButtonChange}></input>Mint Event NFT's
+
+</div>
+
     <span></span>
     <span></span>
     <span></span>
     <span></span>
   
-  
-
-  {formGenerator()}
+    {formGenerator()}
 
 </div>
 
 
-<div class="info-box">
-  
-  <form>
-    <div class="user-box">
-      <input type="text" name="" required="" />
-      <label>Account Number</label>
-    </div>
 
-  </form>
+ </div>
 </div>
- 
-</div>
- 
  )
 }
-// {users.map(u => <h4 key={u._id}>userName : {u.userName}</h4>)}
 
-/*
-
-<html>
-    
-    <label for="fname">Account Number:</label>
-    <input type="text" name="account" onChange={handleChange} />
-    {account}
-  
-    </html>
-
-
-const [inputs, setInputs] = useState([])
-
-const handleRegistration = (data) => console.log(data);
-const { register, handleSubmit } = useForm();
-
-
-const handleChange = (event) => {
-  const account = event.target.account;
-  const flag = event.target.flag;
-  const value = event.target.value;
-  setInputs(values => ({account,flag,value}))
-}
-
-const handleSubmit = (event) => {
-  event.preventDefault();
-  console.log(inputs);
-}
-
-
-const getData = async() => {
-  const res = await axios.get('/api/mintNFT')
-  setInputs(res.data)
-  console.log(res)
-}
-
-
-
-useEffect(() => {
-  getData()
-}, [])
- */
 export default App
 
