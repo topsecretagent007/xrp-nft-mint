@@ -1,5 +1,14 @@
 import xrpl from 'xrpl';
+import axios from 'axios';
 import fs  from 'fs'; //used for storage of token metadata in devmode
+
+import XummSdk from 'xumm-sdk';
+
+
+
+const sdk = new XummSdk.XummSdk('d16951f8-6528-4c3f-88e9-37333e383421','e6d8a068-a55b-4e5a-b540-016847d7e376')
+
+
 
 export class XrplNFTHelper { 
 
@@ -8,8 +17,8 @@ export class XrplNFTHelper {
 
     
     this.transactionDetails = details;
-    this.clientDetails = "wss://xls20-sandbox.rippletest.net:51233" //nft-devnet *Change as needed
-    
+    this.clientDetails = "wss://xrplcluster.com/:51233" //nft-devnet *Change as needed
+   // this.clientDetails = "wss://s.altnet.rippletest.net:51233"
   }
 
 
@@ -35,9 +44,6 @@ export class XrplNFTHelper {
     await client.connect()
     console.log("Connected to server..minting single token.")
 
-
-
-   
   
     const transactionData = {
     TransactionType: this.transactionDetails.TransactionType,
@@ -50,24 +56,6 @@ export class XrplNFTHelper {
     //submit minting transaction
     const tx = await client.submitAndWait(transactionData,{wallet})
 
-    /*
-      function firstFunction(_callback){
-        client.request({
-          method: "account_nfts",
-          account: this.transactionDetails.Account
-          }).then( (result) => { 
-  
-            console.log('result')
-          })
-        _callback();    
-    }
-
-    firstFunction(function() {
-      client.disconnect()
-        console.log("disconnected")
-        return result
-  });  */
-
   const result = await client.request({
     method: "account_nfts",
     account: this.transactionDetails.Account
@@ -75,13 +63,7 @@ export class XrplNFTHelper {
 
    return result.result.account_nfts[result.result.account_nfts.length -1].NFTokenID
 
-   
-  /* Check transaction results -------------------------------------------------
-    console.log("Transaction result:", tx.result.meta.TransactionResult)
-	  console.log("Balance changes:",
-	  JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
-  */
-	
+  	
 
 }
 catch(err) {
@@ -93,7 +75,47 @@ catch(err) {
 
   
 
+async mintTickets(tickets,minterKey){
 
+
+  const client = new xrpl.Client("wss://xrplcluster.com/:51233") 
+  const wallet = xrpl.Wallet.fromSeed(minterKey)
+
+  await client.connect();
+
+  let ticketArr = []
+
+    for (let i=0; i < tickets.length; i++) {
+      ticketArr[i] = tickets[i].TicketSequence;
+    }
+
+    
+    for (let i=0; i < ticketArr.length; i++) {
+      const transactionBlob = {
+          "TransactionType": "NFTokenMint",
+          "Account": wallet.classicAddress,
+          "URI":  xrpl.convertStringToHex("www.testing.com"),
+          "Flags": parseInt(11),
+          "Sequence": 0,
+          "TicketSequence": ticketArr[i],
+          "NFTokenTaxon": 6666
+      }
+      
+      console.log("Minting " + ticketArr[i])
+      const tx =  client.submit(transactionBlob, { wallet: wallet} )
+    }
+
+    let nfts = await client.request({
+      method: "account_nfts",
+      account: this.transactionDetails.Account
+      })
+
+
+    
+    
+  
+    return nfts;
+}
 
 
 async batchX(){
@@ -101,8 +123,8 @@ async batchX(){
 
 
     const client = new xrpl.Client(this.clientDetails) 
-    
     const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret) //secret
+    
     await client.connect()
 
     const nftokenCount = this.transactionDetails.Memos.numberOfTokens
@@ -145,24 +167,17 @@ async batchX(){
 
    
 
- 
-
-
-
   for (let i=0; i < nftokenCount; i++) {
     const transactionBlob = {
         "TransactionType": "NFTokenMint",
         "Account": wallet.classicAddress,
         "URI":  this.transactionDetails.URI,
         "Flags": this.transactionDetails.Flags,
-      //  "TransferFee": .12,
         "Sequence": 0,
         "TicketSequence": tickets[i],
-        "NFTokenTaxon": 0 
-
-
+        "NFTokenTaxon": 5555
     }
-   
+    
     const tx =  client.submit(transactionBlob, { wallet: wallet} )
     
 
@@ -172,8 +187,6 @@ async batchX(){
       limit: 400
     })
     
-    console.log(nfts)
-    console.log("------------")
    
     for(let i = 0; i <= nftokenCount; i++)
     {
@@ -184,13 +197,6 @@ async batchX(){
               marker: nfts.result.marker
           })
         
-        //  setTimeout(()=>{}, 5000)
-        /*
-          console.log(nfts)
-    console.log("11111111111111")
-    console.log(JSON.stringify(nfts,null,2))
-    console.log("11111111111111111")*/
-
     }
 
   }
@@ -209,91 +215,6 @@ return;
 }
 
 
-
-
-  async mintX(){
-    try {
-     
-      const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret) //secret
-      const client = new xrpl.Client(this.clientDetails) 
-      await client.connect()
-      
-      const origTokenArr = [];
-      const newArr = [];
-  
-  
-      //get list of NFTokenID's to compare and create new array for return.
-      await client.request({
-        method: "account_nfts",
-        account: this.transactionDetails.Account
-        }).then((result)=>{
-          result.result.account_nfts.forEach( (e) => {
-            origTokenArr.push(e.NFTokenID)
-          })
-        })
-  
-        
-      console.log("Connected to server..minting " + this.transactionDetails.Memos.numberOfTokens + " tokens")
-  
-  
-      const transactionData = {
-        TransactionType: this.transactionDetails.TransactionType,
-        Account: this.transactionDetails.Account,
-        URI: this.transactionDetails.URI,
-        Flags: this.transactionDetails.Flags,
-        NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
-        }
-  
-        for (let index = 0; index < this.transactionDetails.Memos.numberOfTokens; index++) {
-          
-          //submit minting transaction
-          console.log("Minting token " + index)
-          let tx = await client.submitAndWait(transactionData,{wallet})
-  
-        
-          if(index === this.transactionDetails.Memos.numberOfTokens -1){
-           
-          //get list of NFTokenID's and push to new array.
-           await client.request({
-            method: "account_nfts",
-            account: this.transactionDetails.Account
-            }).then((result)=>{
-              result.result.account_nfts.forEach( (e) => {
-               
-                newArr.push(e.NFTokenID)
-              })
-            })
-              
-           
-            
-          }
-           
-        }
-  
-        let temp = [];
-  
-        for (let index = 1; index <= this.transactionDetails.Memos.numberOfTokens; index++) {
-            
-            temp.push(newArr[newArr.length-index])
-  
-        }
-  
-   
-  
-        client.disconnect()
-        console.log("disconnected from server")
-        return temp
-        
-       
-  
-      
-  }
-  catch(err) {
-  console.log("Error occured during mintX() call" + err)
-  return;
-  }
-  
-  }
 
   /*getTokens
   *
@@ -361,15 +282,6 @@ return;
       
       const tx = await client.submitAndWait(transactionData,{wallet})
   
-      // Check transaction results -------------------------------------------------
-      /*
-      console.log("Transaction result:", tx.result.meta.TransactionResult)
-      console.log("Balance changes:",
-        JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
-      
-      console.log("Disconnected..Done burning single NFT.")
-        */
-
       client.disconnect()
       return tx.result.meta.TransactionResult
 
@@ -437,6 +349,106 @@ catch(err) {
   
   }
 
+  async acctInfo(){
+
+
+    const client = new xrpl.Client(this.clientDetails) 
+
+    await client.connect()
+
+    const account_info = await client.request({
+      "command": "account_info",
+      "account": this.transactionDetails.Account
+    })
+
+    client.disconnect()
+
+    return account_info
+  }
+
+  async getTicketInfo(){
+
+
+    const client = new xrpl.Client(this.clientDetails) 
+
+    await client.connect()
+
+    let response = await client.request({
+      "command": "account_objects",
+      "account": this.transactionDetails.Account,
+      "type": "ticket"
+    })
+
+    client.disconnect()
+
+    return response.result.account_objects
+
+  }
+
+  async cancelTicket(){
+
+
+    const client = new xrpl.Client(this.clientDetails) 
+
+    await client.connect()
+
+    let response = await client.request({
+      "TransactionType": "AccountSet",
+      "account": this.transactionDetails.Account,
+      "Sequence": 76166221
+    }).then( res => { 
+      console.log(res)
+    })
+
+  }
+
+
+  
+  async lookupTx(txId){
+    try{
+
+      const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret)
+
+      const client = new xrpl.Client(this.clientDetails)
+      await client.connect()
+
+      console.log("getting transaction details")
+
+   
+    }
+    catch(err){
+      console.log("error"+err)
+      return;
+    }
+  }
+
+
+  async xummCall(payload){
+    try {
+
+
+      console.log("pinging..")
+    //  const newPayload = await sdk.payload.create(payload, true)
+   const data =  await sdk.payload.create(payload)
+     // console.log("payload: " + JSON.stringify(payload) )
+    
+
+    
+
+    console.log("data: " + data)
+        return data
+
+ }
+catch(err) {
+  console.log("Error occured during xummCall call" + err)
+  return;
+}
+  
+  }
+
+
+
+
 
 
 
@@ -448,102 +460,3 @@ export default XrplNFTHelper
 
 
 
-
-/* Mint X number of identical tokens
-* Assign all to same wallet
-
-
-  @Params (required)
-  -TransactionType: this.transactionDetails.TransactionType,
-  -Account: this.transactionDetails.Account,
-  -URI: this.transactionDetails.URI,
-  -Flags: this.transactionDetails.Flags,
-   -NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
-
-  @returns array of NFTokenID strings
-
-async mintX(){
-  try {
-   
-    const wallet = xrpl.Wallet.fromSeed(this.transactionDetails.Secret) //secret
-    const client = new xrpl.Client(this.clientDetails) 
-    await client.connect()
-    
-    const origTokenArr = [];
-    const newArr = [];
-
-
-    //get list of NFTokenID's to compare and create new array for return.
-    await client.request({
-      method: "account_nfts",
-      account: this.transactionDetails.Account
-      }).then((result)=>{
-        result.result.account_nfts.forEach( (e) => {
-          origTokenArr.push(e.NFTokenID)
-        })
-      })
-
-      
-    console.log("Connected to server..minting " + this.transactionDetails.Memos.numberOfTokens + " tokens")
-
-
-    const transactionData = {
-      TransactionType: this.transactionDetails.TransactionType,
-      Account: this.transactionDetails.Account,
-      URI: this.transactionDetails.URI,
-      Flags: this.transactionDetails.Flags,
-      NFTokenTaxon: this.transactionDetails.NFTokenTaxon,
-      }
-
-      for (let index = 0; index < this.transactionDetails.Memos.numberOfTokens; index++) {
-        
-        //submit minting transaction
-        console.log("Minting token " + index)
-        let tx = await client.submitAndWait(transactionData,{wallet})
-
-      
-        if(index === this.transactionDetails.Memos.numberOfTokens -1){
-         
-        //get list of NFTokenID's and push to new array.
-         await client.request({
-          method: "account_nfts",
-          account: this.transactionDetails.Account
-          }).then((result)=>{
-            result.result.account_nfts.forEach( (e) => {
-             
-              newArr.push(e.NFTokenID)
-            })
-          })
-            
-         
-          
-        }
-         
-      }
-
-      let temp = [];
-
-      for (let index = 1; index <= this.transactionDetails.Memos.numberOfTokens; index++) {
-          
-          temp.push(newArr[newArr.length-index])
-
-      }
-
- 
-
-      client.disconnect()
-      console.log("disconnected from server")
-      return temp
-      
-     
-
-    
-}
-catch(err) {
-console.log("Error occured during mintX() call" + err)
-return;
-}
-
-}
-
-*/
