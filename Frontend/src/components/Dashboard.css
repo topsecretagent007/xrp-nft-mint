@@ -1,0 +1,19 @@
+.primaryBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  td{
+    padding: 3px;
+  }
+
+  .buttonBox{
+    display: flex;
+    justify-content: space-around;
+  }
